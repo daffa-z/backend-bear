@@ -33,18 +33,10 @@ const store = new sessionStore({
     await db.sync();
 })(); */
 
-app.use(session({
-    secret: process.env.SESS_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    store: store,
-    cookie:{
-        secure: 'auto'
-    }
-}))
+
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000'
+    origin: 'http://localhost:https://backend-bear.vercel.app/'
 }));
 app.use(express.json());
 app.use(fileUpload());
@@ -65,7 +57,7 @@ app.use(TamuRoute);
 
 /* store.sync(); */
 
-app.listen(process.env.APP_PORT,()=>{
+app.listen(process.env.PORT,()=>{
     console.log('Server Up and running ....');
 });
 
