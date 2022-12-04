@@ -57,6 +57,10 @@ app.use(TamuRoute);
 
 /* store.sync(); */
 
+app.get("/", (req, res) => {
+    res.send("Express on Vercel");
+  });
+  
 app.listen(process.env.PORT,()=>{
     console.log('Server Up and running ....');
 });
