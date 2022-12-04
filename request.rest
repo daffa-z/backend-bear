@@ -1,0 +1,77 @@
+GET http://localhost:5000/users
+
+###
+GET http://localhost:5000/users/7b54ce73-2df3-4c86-99b5-d1167593d661
+
+//Create User
+###
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "name": "test 123",
+    "email": "test@gmail.com",
+    "password": "123456",
+    "confPassword": "123456",
+    "role": "user"
+}
+
+###
+PATCH http://localhost:5000/users/54a98bac-4f29-47e2-8d14-22e8ce55f817
+Content-Type: application/json
+
+{
+    "name": "test 123 update",
+    "email": "test@gmail.com",
+    "password": "",
+    "confPassword": "",
+    "role": "user"
+}
+
+###
+DELETE http://localhost:5000/users/956581b7-40bf-43c3-a6d1-488ed53f2898
+
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "123456"
+}
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "123456"
+}
+
+###
+GET http://localhost:5000/me 
+
+
+###
+DELETE http://localhost:5000/logout
+
+###
+GET http://localhost:5000/product
+
+
+###
+GET http://localhost:5000/users?search_query=Wisnu&page=0&limit=10
+
+###
+GET http://localhost:5000/amdal?search_query=Wisnu&page=0&limit=10
+
+###
+GET http://localhost:5000/surat?search_query=Masuk&page=0&limit=10
+
+###
+GET http://localhost:5000/suratkeluar?search_query=&page=0&limit=10
+
+###
+GET http://localhost:5000/konsultasi?search_query=Wisnu&page=0&limit=10
