@@ -36,7 +36,7 @@ const store = new sessionStore({
 
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:https://backend-bear.vercel.app/'
+    origin: 'https://backend-bear.vercel.app/'
 }));
 app.use(express.json());
 app.use(fileUpload());
