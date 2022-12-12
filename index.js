@@ -35,10 +35,7 @@ const store = new sessionStore({
 })(); */
 
 
-app.use(cors({
-    credentials: true,
-    origin: 'http://localhost:3000'
-}));
+app.use(cors());
 app.use(express.json());
 app.use(fileUpload());
 app.use(express.static("public"));
