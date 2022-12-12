@@ -85,8 +85,8 @@ export const saveUkl = async(req, res)=>{
     const fileSize2 = file2.data.length;
     const ext = path.extname(file.name);
     const ext2 = path.extname(file2.name);
-    const fileName = file.md5 + ext;
-    const fileName2 = file2.md5 + ext2;
+    const fileName = "dokumentasi"+ nomor + ext;
+    const fileName2 ="BA"+ nomor + ext2;
     const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
     const url2 = `${req.protocol}://${req.get("host")}/images/${fileName2}`;
     const allowedType = ['.png','.jpg','.jpeg','.pdf'];
@@ -133,14 +133,15 @@ export const updateUkl = async(req, res)=>{
         fileName = ukl.dokumentasi;
         fileName2 = ukl.beritaAcara;
     }else{
+        const nomor = req.body.nomor;
         const file = req.files.file;
         const file2 = req.files.file2;
         const fileSize = file.data.length;
         const fileSize2 = file2.data.length;
         const ext = path.extname(file.name);
         const ext2 = path.extname(file2.name);
-        fileName = file.md5 + ext;
-        fileName2 = file2.md5 + ext2;
+        const fileName = "dokumentasi"+ nomor + ext;
+        const fileName2 ="BA"+ nomor + ext2;
         const allowedType = ['.png','.jpg','.jpeg','.pdf'];
 
         if(!allowedType.includes(ext.toLowerCase())) return res.status(422).json({msg: "Invalid Images"});

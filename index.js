@@ -18,6 +18,7 @@ import TamuRoute from "./routes/TamuRoute.js";
 import UklRoute from "./routes/UklRoute.js";
 import DelhRoute from "./routes/DelhRoute.js";
 import DplhRoute from "./routes/DplhRoute.js";
+import SpplRoute from "./routes/SpplRoute.js";
 
 dotenv.config();
 
@@ -36,7 +37,7 @@ const store = new sessionStore({
 
 app.use(cors({
     credentials: true,
-    origin: 'https://backend-bear.vercel.app/'
+    origin: 'http://localhost:3000'
 }));
 app.use(express.json());
 app.use(fileUpload());
@@ -44,6 +45,7 @@ app.use(express.static("public"));
 app.use(UserRoute);
 app.use(ProductRoute);
 app.use(DelhRoute);
+app.use(SpplRoute);
 app.use(DplhRoute);
 app.use(UklRoute);
 app.use(AuthRoute);

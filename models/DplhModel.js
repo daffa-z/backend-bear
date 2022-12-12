@@ -21,6 +21,6 @@ const Dplh = db.define('dplh',{
 
 export default Dplh;
 
-(async ()=>{
+/* (async ()=>{
     await db.sync();
-})();
+})(); */

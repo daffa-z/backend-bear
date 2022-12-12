@@ -5,6 +5,8 @@ const {DataTypes} = Sequelize;
 
 const Amdal = db.define('amdal',{
     judul: DataTypes.STRING,
+    nomor: DataTypes.STRING,
+    jenis: DataTypes.STRING,
     tanggalPenerimaan: DataTypes.STRING,
     pemrakarsa: DataTypes.STRING,
     konsultan: DataTypes.STRING,

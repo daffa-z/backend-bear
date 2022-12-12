@@ -18,7 +18,7 @@ const SuratKeluar = db.define('suratkeluar',{
 });
 
 export default SuratKeluar;
-
+/* 
 (async ()=>{
     await db.sync();
-})();
+})(); */

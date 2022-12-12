@@ -20,6 +20,6 @@ const Konsultasi = db.define('konsultasi',{
 export default Konsultasi;
 
 
-(async ()=>{
+/* (async ()=>{
     await db.sync();
-})();
+})(); */

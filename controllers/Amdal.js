@@ -74,10 +74,12 @@ export const getAmdalById = async(req, res)=>{
 
 export const saveAmdal = (req, res)=>{
     if(req.files === null) return res.status(400).json({msg: "No File Uploaded"});
-    const judul = req.body.title;
+    const nomor = req.body.nomor;
+    const judul = req.body.judul;
+    const jenis = req.body.jenis;
     const file = req.files.file;
-    const tanggalPenerimaan = req.body.tgl;
-    const konsultan = req.body.konsul;
+    const tanggalPenerimaan = req.body.tanggalPenerimaan;
+    const konsultan = req.body.konsultan;
     const pemrakarsa = req.body.pemrakarsa;
     const fileSize = file.data.length;
     const ext = path.extname(file.name);
@@ -91,7 +93,7 @@ export const saveAmdal = (req, res)=>{
     file.mv(`./public/images/${fileName}`, async(err)=>{
         if(err) return res.status(500).json({msg: err.message});
         try {
-            await Amdal.create({judul: judul, tanggalPenerimaan: tanggalPenerimaan, pemrakarsa: pemrakarsa, konsultan: konsultan, namaFile: fileName, url: url});
+            await Amdal.create({judul: judul, nomor: nomor, jenis: jenis, tanggalPenerimaan: tanggalPenerimaan, pemrakarsa: pemrakarsa, konsultan: konsultan, namaFile: fileName, url: url});
             res.status(201).json({msg: "Product Created Successfuly"});
         } catch (error) {
             console.log(error.message);
@@ -112,6 +114,7 @@ export const updateAmdal = async(req, res)=>{
     if(req.files === null){
         fileName = amdal.namaFile;
     }else{
+       
         const file = req.files.file;
         const fileSize = file.data.length;
         const ext = path.extname(file.name);
@@ -128,14 +131,16 @@ export const updateAmdal = async(req, res)=>{
             if(err) return res.status(500).json({msg: err.message});
         });
     }
-    const judul = req.body.title;
-    const tanggalPenerimaan = req.body.tgl;
+    const judul = req.body.judu;;
+    const tanggalPenerimaan = req.body.tanggalPenerimaan;
     const pemrakarsa = req.body.pemrakarsa;
-    const konsultan = req.body.konsul;
+    const konsultan = req.body.konsultan;
     const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+    const nomor = req.body.nomor;
+    const jenis = req.body.jenis;
     
     try {
-        await Amdal.update({judul: judul, tanggalPenerimaan: tanggalPenerimaan, pemrakarsa: pemrakarsa, konsultan: konsultan, namaFile: fileName, url: url},{
+        await Amdal.update({judul: judul, nomor: nomor, jenis: jenis, tanggalPenerimaan: tanggalPenerimaan, pemrakarsa: pemrakarsa, konsultan: konsultan, namaFile: fileName, url: url},{
             where:{
                 id: req.params.id
             }

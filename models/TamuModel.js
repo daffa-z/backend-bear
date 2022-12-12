@@ -20,6 +20,6 @@ const Tamu = db.define('tamu',{
 
 export default Tamu;
 
-(async ()=>{
+/* (async ()=>{
     await db.sync();
-})();
+})(); */
