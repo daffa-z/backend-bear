@@ -1,24 +1,14 @@
-import Konsultasi from "../models/KonsultasiModel.js";
+import Dikplhd from "../models/DikplhdModel.js";
 import path from "path";
 import fs from "fs";
 import {Op} from "sequelize";
 
-
-/* export const getKonsultasi = async(req, res)=>{
-    try {
-        const response = await Konsultasi.findAll();
-        res.json(response);
-    } catch (error) {
-        console.log(error.message);
-    }
-} */
-
-export const getKonsultasi = async(req, res)=>{
+export const getDikplhd = async(req, res)=>{
     const page = parseInt(req.query.page) || 0;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search_query || "";
     const offset = limit * page;
-    const totalRows = await Konsultasi.count({
+    const totalRows = await Dikplhd.count({
         where:{
             [Op.or]: [{judul:{
                 [Op.like]: '%'+search+'%'
@@ -27,16 +17,12 @@ export const getKonsultasi = async(req, res)=>{
             }}, {pemrakarsa:{
                 [Op.like]: '%'+search+'%'
             }}, {konsultan:{
-                [Op.like]: '%'+search+'%'
-            }}, {dokumentasi:{
-                [Op.like]: '%'+search+'%'
-            }}, {beritaAcara:{
                 [Op.like]: '%'+search+'%'
             }}]
         }
     }); 
     const totalPage = Math.ceil(totalRows / limit);
-    const result = await Konsultasi.findAll({
+    const result = await Dikplhd.findAll({
         where:{
             [Op.or]: [{judul:{
                 [Op.like]: '%'+search+'%'
@@ -45,10 +31,6 @@ export const getKonsultasi = async(req, res)=>{
             }}, {pemrakarsa:{
                 [Op.like]: '%'+search+'%'
             }}, {konsultan:{
-                [Op.like]: '%'+search+'%'
-            }}, {dokumentasi:{
-                [Op.like]: '%'+search+'%'
-        }}, {beritaAcara:{
                 [Op.like]: '%'+search+'%'
             }}]
         },
@@ -67,9 +49,9 @@ export const getKonsultasi = async(req, res)=>{
     });
 }
 
-export const getKonsultasiById = async(req, res)=>{
+export const getDikplhdById = async(req, res)=>{
     try {
-        const response = await Konsultasi.findOne({
+        const response = await Dikplhd.findOne({
             where:{
                 id : req.params.id
             }
@@ -79,15 +61,18 @@ export const getKonsultasiById = async(req, res)=>{
         console.log(error.message);
     }
 }
-export const saveKonsultasi = async(req, res)=>{
+
+export const saveDikplhd = async(req, res)=>{
     if(req.files === null) return res.status(400).json({msg: "No File Uploaded"});
-    const judul = req.body.title;
+    const judul = req.body.judul;
     const file = req.files.file;
     const file2 = req.files.file2;
-    const tanggalPelaksanaan = req.body.tgl;
-    const konsultan = req.body.konsul;
+    const tanggalPelaksanaan = req.body.tanggalPelaksanaan;
+    const status = req.body.status;
+    const nomor = req.body.nomor;
+    const konsultan = req.body.konsultan;
     const pemrakarsa = req.body.pemrakarsa;
-    const keterangan = req.body.ket;
+    const keterangan = req.body.keterangan;
     const fileSize = file.data.length;
     const fileSize2 = file2.data.length;
     const ext = path.extname(file.name);
@@ -105,7 +90,9 @@ export const saveKonsultasi = async(req, res)=>{
         file2.mv(`./public/images/${fileName2}`, async(err)=>{
             if(err) return res.status(500).json({msg: err.message});
             try {
-                await Konsultasi.create({judul: judul,
+                await Dikplhd.create({judul: judul,
+                    nomor: nomor,
+                    status: status,
                     tanggalPelaksanaan: tanggalPelaksanaan,
                     pemrakarsa: pemrakarsa,
                     konsultan: konsultan,
@@ -122,19 +109,21 @@ export const saveKonsultasi = async(req, res)=>{
         })
     })
 }
-export const updateKonsultasi = async(req, res)=>{
-    const konsultasi = await Konsultasi.findOne({
+
+export const updateDikplhd = async(req, res)=>{
+    
+    const andal = await Dikplhd.findOne({
         where:{
             id : req.params.id
         }
     });
-    if(!konsultasi) return res.status(404).json({msg: "No Data Found"});
+    if(!andal) return res.status(404).json({msg: "No Data Found"});
     
     let fileName = "";
     let fileName2 = "";
     if(req.files === null){
-        fileName = konsultasi.dokumentasi;
-        fileName2 = konsultasi.beritaAcara;
+        fileName = andal.dokumentasi;
+        fileName2 = andal.beritaAcara;
     }else{
         const file = req.files.file;
         const file2 = req.files.file2;
@@ -149,9 +138,9 @@ export const updateKonsultasi = async(req, res)=>{
         if(!allowedType.includes(ext.toLowerCase())) return res.status(422).json({msg: "Invalid Images"});
         if(fileSize > 5000000 || fileSize2 > 5000000) return res.status(422).json({msg: "Image must be less than 5 MB"});
 
-        const filepath = `./public/images/${konsultasi.dokumentasi}`;
+        const filepath = `./public/images/${andal.dokumentasi}`;
         fs.unlinkSync(filepath);
-        const filepath2 = `./public/images/${konsultasi.beritaAcara}`;
+        const filepath2 = `./public/images/${andal.beritaAcara}`;
         fs.unlinkSync(filepath2);
 
         file.mv(`./public/images/${fileName}`, (err)=>{
@@ -161,16 +150,20 @@ export const updateKonsultasi = async(req, res)=>{
             if(err) return res.status(500).json({msg: err.message});
         });
     }
-    const judul = req.body.title;
-    const tanggalPelaksanaan = req.body.tgl;
+    const judul = req.body.judul;
+    const tanggalPelaksanaan = req.body.tanggalPelaksanaan;
+    const status = req.body.status;
+    const nomor = req.body.nomor;
     const pemrakarsa = req.body.pemrakarsa;
-    const konsultan = req.body.konsul;
-    const keterangan = req.body.ket;
+    const konsultan = req.body.konsultan;
+    const keterangan = req.body.keterangan;
     const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
     const url2 = `${req.protocol}://${req.get("host")}/images/${fileName2}`;
     
     try {
-        await Konsultasi.update({judul: judul,
+        await Dikplhd.update({judul: judul,
+            status: status,
+            nomor: nomor,
             tanggalPelaksanaan: tanggalPelaksanaan,
             pemrakarsa: pemrakarsa,
             konsultan: konsultan,
@@ -189,20 +182,21 @@ export const updateKonsultasi = async(req, res)=>{
         console.log(error.message);
     }
 }
-export const deleteKonsultasi = async(req, res)=>{
-    const konsultasi = await Konsultasi.findOne({
+
+export const deleteDikplhd = async(req, res)=>{
+    const andal = await Dikplhd.findOne({
         where:{
             id : req.params.id
         }
     });
-    if(!konsultasi) return res.status(404).json({msg: "No Data Found"});
+    if(!andal) return res.status(404).json({msg: "No Data Found"});
 
     try {
-        const filepath = `./public/images/${konsultasi.dokumentasi}`;
+        const filepath = `./public/images/${andal.dokumentasi}`;
         fs.unlinkSync(filepath);
-        const filepath2 = `./public/images/${konsultasi.beritaAcara}`;
+        const filepath2 = `./public/images/${andal.beritaAcara}`;
         fs.unlinkSync(filepath2);
-        await Konsultasi.destroy({
+        await Dikplhd.destroy({
             where:{
                 id : req.params.id
             }

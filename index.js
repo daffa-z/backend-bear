@@ -8,10 +8,10 @@ import SequelizeStore from "connect-session-sequelize";
 import UserRoute from "./routes/UserRoute.js";
 import ProductRoute from "./routes/ProductRoute.js";
 import AmdalRoute from "./routes/AmdalRoute.js";
-import AndalRoute from "./routes/AndalRoute.js";
+import DikplhdRoute from "./routes/DikplhdRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
 import AcuanRoute from "./routes/AcuanRoute.js";
-import KonsultasiRoute from "./routes/KonsultasiRoute.js";
+import D3tlhRoute from "./routes/D3tlhRoute.js";
 import SuratRoute from "./routes/SuratRoute.js";
 import SuratKeluarRoute from "./routes/SuratKeluarRoute.js";
 import TamuRoute from "./routes/TamuRoute.js";
@@ -19,6 +19,8 @@ import UklRoute from "./routes/UklRoute.js";
 import DelhRoute from "./routes/DelhRoute.js";
 import DplhRoute from "./routes/DplhRoute.js";
 import SpplRoute from "./routes/SpplRoute.js";
+import RpplhRoute from "./routes/RpplhRoute.js";
+import IklhRoute from "./routes/IklhRoute.js";
 
 dotenv.config();
 
@@ -30,9 +32,9 @@ const store = new sessionStore({
     db: db
 });
 
-/* (async()=>{
+(async()=>{
     await db.sync();
-})(); */
+})();
 
 
 app.use(cors());
@@ -47,12 +49,14 @@ app.use(DplhRoute);
 app.use(UklRoute);
 app.use(AuthRoute);
 app.use(AmdalRoute);
-app.use(AndalRoute);
+app.use(DikplhdRoute);
 app.use(AcuanRoute);
-app.use(KonsultasiRoute);
+app.use(D3tlhRoute);
 app.use(SuratRoute);
 app.use(SuratKeluarRoute);
 app.use(TamuRoute);
+app.use(IklhRoute);
+app.use(RpplhRoute);
 
 /* store.sync(); */
 

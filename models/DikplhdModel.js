@@ -3,8 +3,10 @@ import db from "../config/Database.js";
 
 const {DataTypes} = Sequelize;
 
-const Andal = db.define('andal',{
+const Dikplhd = db.define('dikplhd',{
+    nomor: DataTypes.STRING,
     judul: DataTypes.STRING,
+    status: DataTypes.STRING,
     tanggalPelaksanaan: DataTypes.STRING,
     pemrakarsa: DataTypes.STRING,
     konsultan: DataTypes.STRING,
@@ -17,8 +19,8 @@ const Andal = db.define('andal',{
     freezeTableName: true
 });
 
-export default Andal;
+export default Dikplhd;
 
-/* (async ()=>{
+(async ()=>{
     await db.sync();
-})(); */
+})();

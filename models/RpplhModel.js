@@ -3,8 +3,10 @@ import db from "../config/Database.js";
 
 const {DataTypes} = Sequelize;
 
-const Konsultasi = db.define('konsultasi',{
+const Rpplh = db.define('rpplh',{
+    nomor: DataTypes.STRING,
     judul: DataTypes.STRING,
+    status: DataTypes.STRING,
     tanggalPelaksanaan: DataTypes.STRING,
     pemrakarsa: DataTypes.STRING,
     konsultan: DataTypes.STRING,
@@ -17,9 +19,8 @@ const Konsultasi = db.define('konsultasi',{
     freezeTableName: true
 });
 
-export default Konsultasi;
+export default Rpplh;
 
-
-/* (async ()=>{
+(async ()=>{
     await db.sync();
-})(); */
+})();

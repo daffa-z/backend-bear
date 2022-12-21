@@ -1,14 +1,24 @@
-import Andal from "../models/AndalModel.js";
+import D3tlh from "../models/D3tlhModel.js";
 import path from "path";
 import fs from "fs";
 import {Op} from "sequelize";
 
-export const getAndal = async(req, res)=>{
+
+/* export const getD3tlh = async(req, res)=>{
+    try {
+        const response = await D3tlh.findAll();
+        res.json(response);
+    } catch (error) {
+        console.log(error.message);
+    }
+} */
+
+export const getD3tlh = async(req, res)=>{
     const page = parseInt(req.query.page) || 0;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search_query || "";
     const offset = limit * page;
-    const totalRows = await Andal.count({
+    const totalRows = await D3tlh.count({
         where:{
             [Op.or]: [{judul:{
                 [Op.like]: '%'+search+'%'
@@ -17,12 +27,16 @@ export const getAndal = async(req, res)=>{
             }}, {pemrakarsa:{
                 [Op.like]: '%'+search+'%'
             }}, {konsultan:{
+                [Op.like]: '%'+search+'%'
+            }}, {dokumentasi:{
+                [Op.like]: '%'+search+'%'
+            }}, {beritaAcara:{
                 [Op.like]: '%'+search+'%'
             }}]
         }
     }); 
     const totalPage = Math.ceil(totalRows / limit);
-    const result = await Andal.findAll({
+    const result = await D3tlh.findAll({
         where:{
             [Op.or]: [{judul:{
                 [Op.like]: '%'+search+'%'
@@ -31,6 +45,10 @@ export const getAndal = async(req, res)=>{
             }}, {pemrakarsa:{
                 [Op.like]: '%'+search+'%'
             }}, {konsultan:{
+                [Op.like]: '%'+search+'%'
+            }}, {dokumentasi:{
+                [Op.like]: '%'+search+'%'
+        }}, {beritaAcara:{
                 [Op.like]: '%'+search+'%'
             }}]
         },
@@ -49,9 +67,9 @@ export const getAndal = async(req, res)=>{
     });
 }
 
-export const getAndalById = async(req, res)=>{
+export const getD3tlhById = async(req, res)=>{
     try {
-        const response = await Andal.findOne({
+        const response = await D3tlh.findOne({
             where:{
                 id : req.params.id
             }
@@ -61,12 +79,13 @@ export const getAndalById = async(req, res)=>{
         console.log(error.message);
     }
 }
-
-export const saveAndal = async(req, res)=>{
+export const saveD3tlh = async(req, res)=>{
     if(req.files === null) return res.status(400).json({msg: "No File Uploaded"});
     const judul = req.body.judul;
     const file = req.files.file;
     const file2 = req.files.file2;
+    const status = req.body.status;
+    const nomor = req.body.nomor;
     const tanggalPelaksanaan = req.body.tanggalPelaksanaan;
     const konsultan = req.body.konsultan;
     const pemrakarsa = req.body.pemrakarsa;
@@ -88,7 +107,9 @@ export const saveAndal = async(req, res)=>{
         file2.mv(`./public/images/${fileName2}`, async(err)=>{
             if(err) return res.status(500).json({msg: err.message});
             try {
-                await Andal.create({judul: judul,
+                await D3tlh.create({judul: judul,
+                    nomor: nomor,
+                    status: status,
                     tanggalPelaksanaan: tanggalPelaksanaan,
                     pemrakarsa: pemrakarsa,
                     konsultan: konsultan,
@@ -105,21 +126,19 @@ export const saveAndal = async(req, res)=>{
         })
     })
 }
-
-export const updateAndal = async(req, res)=>{
-    
-    const andal = await Andal.findOne({
+export const updateD3tlh = async(req, res)=>{
+    const d3tlh = await D3tlh.findOne({
         where:{
             id : req.params.id
         }
     });
-    if(!andal) return res.status(404).json({msg: "No Data Found"});
+    if(!d3tlh) return res.status(404).json({msg: "No Data Found"});
     
     let fileName = "";
     let fileName2 = "";
     if(req.files === null){
-        fileName = andal.dokumentasi;
-        fileName2 = andal.beritaAcara;
+        fileName = d3tlh.dokumentasi;
+        fileName2 = d3tlh.beritaAcara;
     }else{
         const file = req.files.file;
         const file2 = req.files.file2;
@@ -134,9 +153,9 @@ export const updateAndal = async(req, res)=>{
         if(!allowedType.includes(ext.toLowerCase())) return res.status(422).json({msg: "Invalid Images"});
         if(fileSize > 5000000 || fileSize2 > 5000000) return res.status(422).json({msg: "Image must be less than 5 MB"});
 
-        const filepath = `./public/images/${andal.dokumentasi}`;
+        const filepath = `./public/images/${d3tlh.dokumentasi}`;
         fs.unlinkSync(filepath);
-        const filepath2 = `./public/images/${andal.beritaAcara}`;
+        const filepath2 = `./public/images/${d3tlh.beritaAcara}`;
         fs.unlinkSync(filepath2);
 
         file.mv(`./public/images/${fileName}`, (err)=>{
@@ -148,6 +167,8 @@ export const updateAndal = async(req, res)=>{
     }
     const judul = req.body.judul;
     const tanggalPelaksanaan = req.body.tanggalPelaksanaan;
+    const nomor = req.body.nomor;
+    const status = req.body.status;
     const pemrakarsa = req.body.pemrakarsa;
     const konsultan = req.body.konsultan;
     const keterangan = req.body.keterangan;
@@ -155,7 +176,9 @@ export const updateAndal = async(req, res)=>{
     const url2 = `${req.protocol}://${req.get("host")}/images/${fileName2}`;
     
     try {
-        await Andal.update({judul: judul,
+        await D3tlh.update({judul: judul,
+            nomor: nomor,
+            status: status,
             tanggalPelaksanaan: tanggalPelaksanaan,
             pemrakarsa: pemrakarsa,
             konsultan: konsultan,
@@ -174,21 +197,20 @@ export const updateAndal = async(req, res)=>{
         console.log(error.message);
     }
 }
-
-export const deleteAndal = async(req, res)=>{
-    const andal = await Andal.findOne({
+export const deleteD3tlh = async(req, res)=>{
+    const d3tlh = await D3tlh.findOne({
         where:{
             id : req.params.id
         }
     });
-    if(!andal) return res.status(404).json({msg: "No Data Found"});
+    if(!d3tlh) return res.status(404).json({msg: "No Data Found"});
 
     try {
-        const filepath = `./public/images/${andal.dokumentasi}`;
+        const filepath = `./public/images/${d3tlh.dokumentasi}`;
         fs.unlinkSync(filepath);
-        const filepath2 = `./public/images/${andal.beritaAcara}`;
+        const filepath2 = `./public/images/${d3tlh.beritaAcara}`;
         fs.unlinkSync(filepath2);
-        await Andal.destroy({
+        await D3tlh.destroy({
             where:{
                 id : req.params.id
             }
